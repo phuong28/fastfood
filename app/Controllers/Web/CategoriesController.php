@@ -19,7 +19,9 @@ class CategoriesController extends WebController
     {
         $slug = $_GET['slug'];
         $foundCategory = $this->category->where(['slug' => $slug])->first();
-        $products = $this->product->where(['category_id' => $foundCategory['id']])->hydrate();
-        return $this->view('categories/show-product.php', ['products' => $products]);
+        $products = $this->product->where(['category_id' => $foundCategory['category_id']])->hydrate();
+        // var_dump($products);
+        // die();
+        return $this->view('categories/show-products.php', ['products' => $products]);
     }
 }

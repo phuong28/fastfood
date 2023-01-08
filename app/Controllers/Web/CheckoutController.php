@@ -2,29 +2,22 @@
 
 require_once('app/Controllers/Web/WebController.php');
 require_once('app/Models/Cart.php');
-require_once('app/Models/City.php');
-require_once('app/Models/District.php');
-require_once('app/Models/Ward.php');
+
+// require_once('app/Models/Model.php');
 
 class CheckoutController extends WebController
 {
     private $cart;
-    private $city;
-    private $district;
-    private $wards;
 
     public function __construct()
     {
-        $this->cart = new Cart();    
-        $this->city = new City();
-        $this->district = new District();
-        $this->wards = new Ward();
+        $this->cart = new Cart();
     }
     public function index()
     {
         $cartItems = $this->cart->getCartItems();
-        $cities = $this->city->findAll()->hydrate();
-        return $this->view('checkout/index.php', ['cartItems' => $cartItems, 'cities' => $cities]);
+        
+        return $this->view('checkout/index.php', ['cartItems' => $cartItems]);
     }
 
     public function districts()

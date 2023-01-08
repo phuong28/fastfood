@@ -1,127 +1,96 @@
+
 <?php require_once('app/Models/Category.php'); ?>
 <?php require_once('core/Auth.php'); ?>
 <?php require_once('app/Models/Cart.php'); ?>
-
-<header id="header"><!--header-->
-		<div class="header_top"><!--header_top-->
-			<div class="container">
-				<div class="row">
-					<div class="col-sm-6">
-						<div class="contactinfo">
-							<ul class="nav nav-pills">
-								<li><a href="#"><i class="fa fa-phone"></i> +2 95 01 88 821</a></li>
-								<li><a href="#"><i class="fa fa-envelope"></i> info@domain.com</a></li>
-							</ul>
-						</div>
-					</div>
-					<div class="col-sm-6">
-						<div class="social-icons pull-right">
-							<ul class="nav navbar-nav">
-								<li><a href="#"><i class="fa fa-facebook"></i></a></li>
-								<li><a href="#"><i class="fa fa-twitter"></i></a></li>
-								<li><a href="#"><i class="fa fa-linkedin"></i></a></li>
-								<li><a href="#"><i class="fa fa-dribbble"></i></a></li>
-								<li><a href="#"><i class="fa fa-google-plus"></i></a></li>
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div><!--/header_top-->
-		
-		<div class="header-middle"><!--header-middle-->
-			<div class="container">
-				<div class="row">
-					<div class="col-md-4 clearfix">
-						<div class="logo pull-left">
-							<a href="<?php echo url('homepage/index'); ?>"><img src="<?php echo asset('assets/web/images/home/logo.png')?>" alt="" /></a>
-						</div>
-						<div class="btn-group pull-right clearfix">
-							<div class="btn-group">
-								<button type="button" class="btn btn-default dropdown-toggle usa" data-toggle="dropdown">
-									USA
-									<span class="caret"></span>
-								</button>
-								<ul class="dropdown-menu">
-									<li><a href="">Canada</a></li>
-									<li><a href="">UK</a></li>
-								</ul>
-							</div>
+    <!-- Header Section Begin -->
+    <header class="header">
+        <div class="header__top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="header__top__left">
+                            <ul>
+                                <li><i class="fa fa-envelope"></i> huong@gmail.com</li>
+                                <li>Giảm giá cho tất cả mặt hàng từ 300k</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="header__top__right">
+                            <div class="header__top__right__social">
+                                <a href="#"><i class="fa fa-facebook"></i></a>
+                                <a href="#"><i class="fa fa-twitter"></i></a>
+                                <a href="#"><i class="fa fa-linkedin"></i></a>
+                                <a href="#"><i class="fa fa-pinterest-p"></i></a>
+                            </div>
+                            
+                            <div class="header__top__right__auth">
+                            <?php if (!Auth::getUser('user')): ?>
+                                <div class="header__top__right__auth">
+                                    <a href="<?php echo url('authentication/showLoginForm') ?>"><i class="fa fa-user"></i> Đăng nhập</a>
+                                </div>
+                                <div class="header__top__right__auth">
+                                    <a href="<?php echo url('authentication/showRegisterForm') ?>"><i class="fa fa-user"></i>Đăng ký</a>
+                                </div>
+							<?php else:  ?>
+                                <div class="header__top__right__auth">
+                                    <span><i class="fa fa-user"></i><?php echo Auth::getUser('user')['name']?></span>
+                                </div>
+                                <div class="header__top__right__auth">
+                                    <a href="<?php echo url('shopcart/index') ?>"><i class="fa fa-user"></i>Giỏ hàng</a>
+                                </div>
+                                <div class="header__top__right__auth">
+                                    <a href="<?php echo url('authentication/logout') ?>"><i class="fa fa-user"></i>Đăng xuất</a>
+                                </div>
+							<?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="header__logo">
+                        <a href="<?php echo url('homepage/index') ?>"><img src="<?php echo asset('assets/web/img/maxresdefault.jpg')?>" style="width:100px" alt=""></a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <nav class="header__menu">
+                        <ul>
+                            <li class="active"><a href="<?php echo url('homepage/index') ?>">Trang chủ</a></li>
+                            
+                            <li><a href="#">Pages</a>
+                                <ul class="header__menu__dropdown">
+                                    <li><a href="<?php echo url('shopcart/index') ?>">Giỏ hàng</a></li>
+                                    <li><a href="<?php echo url('checkout/index') ?>">Kiểm tra</a></li>
+                                </ul>
+                            </li>
+                            <!-- <li><a href="<?php echo url('blog/index') ?>">Blog</a></li> -->
+                            <li><a href="<?php echo url('contact/index') ?>">Liên hệ</a></li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-lg-3">
+                    <div class="header__cart">
+                        <div class="header__top__right__auth">
+                            
+                                <div class="header__top__right__auth">
+                                    <?php if (!Auth::getUser('user')): ?>
+                                        <a href="<?php echo url('admin/authentication/index') ?>"><i class="fa fa-user"></i>Đăng nhập với tư cách Quản lý</a>
+                                    <?php else:  ?>
+                                        
+                                        <div></div>
+                                    <?php endif; ?>
+                                </div>
 							
-							<div class="btn-group">
-								<button type="button" class="btn btn-default dropdown-toggle usa" data-toggle="dropdown">
-									DOLLAR
-									<span class="caret"></span>
-								</button>
-								<ul class="dropdown-menu">
-									<li><a href="">Canadian Dollar</a></li>
-									<li><a href="">Pound</a></li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-8 clearfix">
-						<div class="shop-menu clearfix pull-right">
-							<ul class="nav navbar-nav">
-								<!-- <li><a href=""><i class="fa fa-user"></i> Account</a></li>
-								<li><a href=""><i class="fa fa-star"></i> Wishlist</a></li>
-								<li><a href="checkout.html"><i class="fa fa-crosshairs"></i> Checkout</a></li>
-								<li><a href="cart.html"><i class="fa fa-shopping-cart"></i> Cart</a></li> -->
-								<?php if (!Auth::getUser('user')): ?>
-									<li><a href="<?php echo url('authentication/index'); ?>"><i class="fa fa-lock"></i> Login</a></li>
-								<?php else:  ?>
-									<li><?php echo Auth::getUser('user')['name']?></a></li>
-									<a href="<?php echo url('cart/index') ?>">Your cart (<?php echo Cart::countCartItems(); ?>)</a>
-									<a href="<?php echo url('authentication/logout') ?>">Logout</a>
-								<?php endif; ?>
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div><!--/header-middle-->
-	
-		<div class="header-bottom"><!--header-bottom-->
-			<div class="container">
-				<div class="row">
-					<div class="col-sm-9">
-						<div class="navbar-header">
-							<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-								<span class="sr-only">Toggle navigation</span>
-								<span class="icon-bar"></span>
-								<span class="icon-bar"></span>
-								<span class="icon-bar"></span>
-							</button>
-						</div>
-						<div class="mainmenu pull-left">
-							<ul class="nav navbar-nav collapse navbar-collapse">
-								<li><a href="<?php echo url('homepage/index') ?>" class="active">Home</a></li>
-								<li class="dropdown"><a href="#">Categories<i class="fa fa-angle-down"></i></a>
-                                    <ul role="menu" class="sub-menu">
-                                        <!-- <li><a href="shop.html">Products</a></li>
-										<li><a href="product-details.html">Product Details</a></li> 
-										<li><a href="checkout.html">Checkout</a></li> 
-										<li><a href="">Cart</a></li> 
-										<li><a href="login.html">Login</a></li>  -->
-									<?php 
-										$category = new Category(); 
-										$categories = $category->findAll()->hydrate();
-									?>
-										<?php foreach($categories as $category): ?>
-											<li><a href="<?php echo url("categories/show-products/".$category->slug) ?>"><?php echo $category->name;?></a></li> 
-										<?php endforeach?>
-                                    </ul>
-                                </li> 
-								
-							</ul>
-						</div>
-					</div>
-					<div class="col-sm-3">
-						<div class="search_box pull-right">
-							<input type="text" placeholder="Search"/>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div><!--/header-bottom-->
-	</header><!--/header-->
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </header>
+    <!-- Header Section End -->

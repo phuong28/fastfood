@@ -1,26 +1,28 @@
-<div class="product-image-wrapper">
-    <div class="single-products">
-            <div class="productinfo text-center">
-                <?php //print_r($product->image()['image'])?>
-                <a href="<?php echo url("products/show/{$product->id}") ?>"><img src="<?php echo asset("storage/{$product->image()['image']}") ?>" alt=""></a>
-                <h2><?php echo $product->formatPrice(); ?></h2>
-                <p><?php echo $product->name; ?></p>
-                <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+
+    <div class="featured__item">
+
+        <a href="<?php echo url("product/show/{$product->product_id}") ?>">
+        <!-- <img src="<?php echo asset("storage/{$product->image}") ?>"/> -->
+            <div id="setbg" class="featured__item__pic set-bg" data-setbg="<?php echo asset("storage/{$product->image}") ?>">
+
+                <ul class="featured__item__pic__hover">
+                    <li>
+                        <form action="#" method="POST">
+                            <button type="submit" style="background-color: lightgreen;"><i class="fa fa-heart"></i></i></button>
+                        </form>
+                    </li>    
+                    
+                    <li>
+                        <form action="<?php echo url("shopcart/add/{$product->product_id}")?>" method="POST">
+                            <button type="submit" style="background-color: lightgreen;"><i class="fa fa-shopping-cart"></i></button>
+                        </form>
+                    </li>
+                </ul>
             </div>
-            <div class="product-overlay">
-                <div class="overlay-content">
-                    <h2><?php echo $product->formatPrice(); ?></h2>
-                    <a href="<?php echo url("products/show/{$product->id}") ?>"><p><?php echo $product->name; ?></p></a>
-                    <form action="<?php echo url("cart/add/{$product->id}")?>" method="POST">
-                        <button type="submit" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</button>
-                    </form>
-                </div>
+            
+            <div class="featured__item__text">
+                <h6><a href="<?php echo url("product/show/{$product->product_id}") ?>"><?php echo $product->name; ?></a></h6>
+                <h5><?php echo $product->formatPrice(); ?> VND</h5>
             </div>
+        </a>
     </div>
-    <div class="choose">
-        <ul class="nav nav-pills nav-justified">
-            <li><a href="#"><i class="fa fa-plus-square"></i>Add to wishlist</a></li>
-            <li><a href="#"><i class="fa fa-plus-square"></i>Add to compare</a></li>
-        </ul>
-    </div>
-</div>

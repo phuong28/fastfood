@@ -12,17 +12,58 @@ class Model
 
     protected $sql;
 
+    protected $id = 'id';
+
+    //Allow fields to be inserted or updated in database 
+    protected $fillable = [];
+
     public function __construct()
     {
         $this->dbConnection = DatabaseConnection::getInstance();
+        $this->checkRequiredProperties();
     }
 
+    /**
+     * Check required properties in child Model class.
+     *
+     * @return void
+     */
+    public function checkRequiredProperties()
+    {
+        if (!property_exists($this, 'table')) {
+            throw new Exception('Please add property table to class '. get_class($this));
+        }
+
+        if (!property_exists($this, 'fillable')) {
+            throw new Exception("Please add property fillable with fields from database to class ". get_class($this));
+        }
+    }
+
+    /**
+     * Begin querying
+     *
+     * @param array $columns
+     * @return void
+     */
     public function findAll($columns = ['*'])
     {
         $columns = implode(',', $columns);
         $this->sql = "SELECT $columns FROM {$this->table}";
         $result = $this->dbConnection->query($this->sql);
         $this->data = $result->fetch_all(MYSQLI_ASSOC);
+        return $this;
+    }
+
+    /**
+     * GET first record
+     *
+     * @param [type] $id
+     */
+    public function find($id)
+    {
+        $this->sql = "SELECT * FROM {$this->table} where $this->id = $id";
+        $result = $this->dbConnection->query($this->sql);
+        $this->data = $result->fetch_assoc();
         return $this;
     }
 
@@ -108,6 +149,10 @@ class Model
     public function create($data)
     {
         if (count($data) > 0) {
+            $data = array_filter($data, function($key) {
+                return in_array($key, $this->fillable);
+            }, ARRAY_FILTER_USE_KEY);
+
             $keys = array_keys($data);
             $values = array_map(function($item) {
                 return "'$item'";
@@ -116,39 +161,45 @@ class Model
             $fields = implode(',',$keys);
             $values = implode(',',$values);
             $this->sql = "INSERT INTO {$this->table}({$fields}) VALUES ($values)";
-            return $this->dbConnection->query($this->sql);
+            $result = $this->dbConnection->query($this->sql);
+            if ($result) {
+                $data['id'] = $this->dbConnection->insert_id;
+                return $data;
+            }
+            else {
+                return "Insert statement fail:".$this->dbConnection->error;
+            }
         }
-    }
-
-    /**
-     * GET first record
-     *
-     * @param [type] $id
-     */
-    public function find($id)
-    {
-        $this->sql = "SELECT * FROM {$this->table} where id = {$id}";
-        $result = $this->dbConnection->query($this->sql);
-        $this->data = $result->fetch_assoc();
-        return $this;
     }
 
     /**
      * Update
      *
-     * @param [type] $data
+     * @param [type] $data: $_POST
      * @param [type] $id
      * @return void
      */
     public function update($data, $id)
     {
-        $updateDataString = implode(',', array_map(function($key, $value) {
-            return "$key = '$value'";
-        }, array_keys($data), array_values($data)));
-
-        $this->sql = "UPDATE {$this->table} SET $updateDataString WHERE id = $id";
-        $result = $this->dbConnection->query($this->sql);
-        return $result;
+        
+        if (count($data) > 0) {
+            $data = array_filter($data, function($key) {
+                return in_array($key, $this->fillable);
+            }, ARRAY_FILTER_USE_KEY);
+            
+            $updateDataString = implode(',', array_map(function($key, $value) {
+                return "$key = '$value'";
+            }, array_keys($data), array_values($data)));
+            $this->sql = "UPDATE {$this->table} SET $updateDataString WHERE $this->id = $id";
+            $result = $this->dbConnection->query($this->sql);
+            if ($result) 
+            {
+                return $data;
+            }
+            else {
+                return "Update statement fail:".$this->dbConnection->error;
+            }
+        }
     }
 
     /**
@@ -159,7 +210,7 @@ class Model
      */
     public function delete($id)
     {
-        $this->sql = "DELETE FROM {$this->table} WHERE id = $id";
+        $this->sql = "DELETE FROM {$this->table} WHERE $this->id = $id";
         $result = $this->dbConnection->query($this->sql);
         return $result;
     }
@@ -169,5 +220,11 @@ class Model
     public function toSql()
     {
         print_r($this->sql);die();
+    }
+
+    //======Get last inserted id========
+    public function lastInsertedId()
+    {
+        return $this->dbConnection->lastInsertedId;
     }
 }

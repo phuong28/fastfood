@@ -13,32 +13,36 @@ class Cart
 
     public function addCartItem($itemId)
     {
+//create
         if (!isset($this->itemIds[$itemId])) {
-            $this->itemIds[$itemId] = ['cart_quantity' => 1];
+            $this->itemIds[$itemId] = ['quantity' => 1];
         }
         else {
-            $quantity = $this->itemIds[$itemId]['cart_quantity'] + 1;
-            $this->itemIds[$itemId] = ['cart_quantity' => $quantity];
+            $quantity = $this->itemIds[$itemId]['quantity'] + 1;
+            $this->itemIds[$itemId] = ['quantity' => $quantity];
         }
         $this->applySession();
     }
 
     public function updateCartItem($itemId, $quantity)
     {
+        //update
         if (isset($this->itemIds[$itemId])) {
-            $this->itemIds[$itemId]['cart_quantity'] = $quantity;
+            $this->itemIds[$itemId]['quantity'] = $quantity;
         }
         $this->applySession();
     }
 
     public function deleteCartItem($itemId)
     {
+        //delete
         unset($this->itemIds[$itemId]);
         $this->applySession();
     }
 
     public function getCartItems()
     {
+        //select
         if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) 
         {
             $cartItems = $this->getCartSession();
@@ -47,9 +51,9 @@ class Cart
             $products = $product->getProductsByIds($cartItemsId);
             foreach ($products as $key => $product) {
                 $productId = $product['product_id'];
-                $products[$productId]['cart_quantity'] = $cartItems[$productId]['cart_quantity'];
-                $this->itemIds[$productId]['product'] = $product;
-                $this->itemIds[$productId]['cart_quantity'] = $cartItems[$productId]['cart_quantity'];
+                $products[$productId]['quantity'] = $cartItems[$productId]['quantity'];
+                $this->itemIds[$productId] = $product;
+                $this->itemIds[$productId]['quantity'] = $cartItems[$productId]['quantity'];
             }
 
             return $this->itemIds;
